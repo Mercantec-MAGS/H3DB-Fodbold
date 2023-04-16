@@ -11,7 +11,8 @@ namespace FodboldDB_H3DB.Models
     {
         public string Name { get; set; }
         public string? AgeGroup { get; set; }
-        public string? LeagueId { get; set; }
         public List<Match> Matches { get; set; }
+        public List<Team> Teams { get; set; }
     }
 }
+

@@ -15,6 +15,5 @@ namespace FodboldDB_H3DB.Models
         public string Name { get; set; }
         public string? State { get; set; }
         public Coach Coach { get; set; }
-        public League? League { get; set; }
     }
 }
