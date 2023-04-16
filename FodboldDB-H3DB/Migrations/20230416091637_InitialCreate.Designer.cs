@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FodboldDB_H3DB.Migrations
 {
     [DbContext(typeof(FodboldDBContext))]
-    [Migration("20230413075748_AddedModelBuilder")]
-    partial class AddedModelBuilder
+    [Migration("20230416091637_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,13 +113,7 @@ namespace FodboldDB_H3DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AwayTeamId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HomeTeamId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LeagueId")
+                    b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("MatchEnd")
@@ -138,10 +132,6 @@ namespace FodboldDB_H3DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AwayTeamId");
-
-                    b.HasIndex("HomeTeamId");
-
                     b.HasIndex("LeagueId");
 
                     b.ToTable("Matchs");
@@ -158,6 +148,9 @@ namespace FodboldDB_H3DB.Migrations
                     b.Property<int?>("LeagueId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MatchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -169,6 +162,8 @@ namespace FodboldDB_H3DB.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LeagueId");
+
+                    b.HasIndex("MatchId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -204,29 +199,9 @@ namespace FodboldDB_H3DB.Migrations
 
             modelBuilder.Entity("FodboldDB_H3DB.Models.Match", b =>
                 {
-                    b.HasOne("FodboldDB_H3DB.Models.Team", "AwayTeam")
-                        .WithMany()
-                        .HasForeignKey("AwayTeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FodboldDB_H3DB.Models.Team", "HomeTeam")
-                        .WithMany()
-                        .HasForeignKey("HomeTeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FodboldDB_H3DB.Models.League", "League")
+                    b.HasOne("FodboldDB_H3DB.Models.League", null)
                         .WithMany("Matches")
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AwayTeam");
-
-                    b.Navigation("HomeTeam");
-
-                    b.Navigation("League");
+                        .HasForeignKey("LeagueId");
                 });
 
             modelBuilder.Entity("FodboldDB_H3DB.Models.Team", b =>
@@ -234,12 +209,21 @@ namespace FodboldDB_H3DB.Migrations
                     b.HasOne("FodboldDB_H3DB.Models.League", null)
                         .WithMany("Teams")
                         .HasForeignKey("LeagueId");
+
+                    b.HasOne("FodboldDB_H3DB.Models.Match", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("MatchId");
                 });
 
             modelBuilder.Entity("FodboldDB_H3DB.Models.League", b =>
                 {
                     b.Navigation("Matches");
 
+                    b.Navigation("Teams");
+                });
+
+            modelBuilder.Entity("FodboldDB_H3DB.Models.Match", b =>
+                {
                     b.Navigation("Teams");
                 });
 
